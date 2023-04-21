@@ -1,14 +1,13 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
+use once_cell::sync::Lazy;
+use std::collections::HashMap;
+use unicode_segmentation::UnicodeSegmentation;
+
+type EmojiMap = HashMap<&'static str, &'static str>;
+
+pub fn remove_emoji(text: &str) -> String {
+    text.graphemes(true)
+        .filter(|grapheme| !ONCE_CELL.contains_key(*grapheme))
+        .collect()
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+static ONCE_CELL: Lazy<EmojiMap> = include!("emoji_map.in");
