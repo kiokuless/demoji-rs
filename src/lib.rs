@@ -10,4 +10,14 @@ pub fn remove_emoji(text: &str) -> String {
         .collect()
 }
 
+pub fn find_emoji(text: &str) -> EmojiMap {
+    text.graphemes(true)
+        .fold(HashMap::new(), |mut emojis, grapheme| {
+            if let Some((name, value)) = ONCE_CELL.get_key_value(grapheme) {
+                emojis.insert(*name, *value);
+            }
+            emojis
+        })
+}
+
 static ONCE_CELL: Lazy<EmojiMap> = include!("emoji_map.in");
